@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Gabriel Canali">
+        <meta name="description" content="TicTacToe made with one file">
+        <title>TicTacToe</title>
+        <style>
+            body{
+                margin: 0;
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            }
+            .hidden{
+                display: none;
+            }
+            .application{
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                position: relative;
+                background-color: rgb(149, 201, 192);
+            }
+            .header-content{
+               position: absolute;
+               top: 0;
+               width: 100%;
+               text-align: center;
+               background-color: #fff;
+            }
+            .header-content h1{
+                font-size: 16px;
+                margin: 1rem 0;
+            }
+            .main-content{
+                display: flex;
+                align-self: center;
+                background-color: #fff;
+                -webkit-box-shadow: 0px 10px 8px 3px rgba(0,0,0,0.15); 
+                box-shadow: 0px 10px 8px 3px rgba(0,0,0,0.15);
+                padding: 2rem;
+                margin: 2rem;
+            }
+            .game-content{
+                display: grid;
+                grid-template-columns: repeat(3, auto);
+                border: 1px solid rgba(100, 100, 100, 0.089);
+                box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.15)
+            }
+            .game-square{
+                width: 5rem;
+                height: 5rem;
+            }
+            .game-square:nth-child(-n+6){
+                border-bottom: 1px solid #000;
+            }
+            .game-square:nth-child(3n-4){
+                border-right: 1px solid #000;
+                border-left: 1px solid #000;
+            }
+            .game-square.circle{
+                background-color: rgb(169, 169, 255);
+            }
+            .game-square.cross{
+                background-color: #ffa4a4;
+            }
+            .footer-content{
+                display: flex;
+                justify-content: center;
+            }
+            .modal-win{
+                position: absolute;
+                left: 0;
+                right: 0;
+                text-align: center;
+                background-color: #fff;
+                max-height: 300px;
+                padding: 2rem 0;
+            }
+            .modal-win .modal-content{
+                display: flex;
+                margin: 0 auto;
+                flex-direction: column;
+                max-width: 20%;
+            } 
+            .modal-win h1 {
+                margin: 0 0 2rem;
+            }
+            .buttons{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            button {
+                border: none;
+                border-radius: 2rem;
+                padding: 1rem;
+                cursor: pointer;
+                color: white;
+            }
+            button.newgame{
+                background-color: rgb(170, 208, 170);
+            }
+            button.newgame:hover{
+                background-color: rgba(170, 208, 170, 0.85);
+            }
+            button.reload{
+                background-color: rgb(218, 159, 159);
+            }
+            button.reload:hover{
+                background-color: rgba(218, 159, 159, 0.85);
+            }
+            @media screen and (max-width: 1200px) {
+                .modal-win .modal-content{
+                    max-width: 75%;
+                }
+                .buttons{
+                    flex-direction: column;
+                }
+                button:first-child {
+                    margin-bottom: 1rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="application">
+            <div class="header-content">
+                <h1>TicTacToe - One file</h1>
+            </div>
+            <!-- TODO: Make main content responsive -->
+            <div class="main-content">
+                <div class="game-content">
+
+                    <div class="game-square" data-square="1"></div>
+                    <div class="game-square" data-square="2"></div>
+                    <div class="game-square" data-square="3"></div>
+
+                    <div class="game-square" data-square="4"></div>
+                    <div class="game-square" data-square="5"></div>
+                    <div class="game-square" data-square="6"></div>
+
+                    <div class="game-square" data-square="7"></div>
+                    <div class="game-square" data-square="8"></div>
+                    <div class="game-square" data-square="9"></div>
+
+                </div>
+            </div>
+            <div class="footer-content">
+                <p>Turno:
+                    <span class="game-player player-circle">O</span>
+                    <span class="game-player player-cross hidden">X</span>
+                </p>
+            </div>
+            <div class="modal-win hidden">
+                <div class="modal-content">
+                    <h1></h1>
+                    <!-- TODO: Buttons functions + Score system -->
+                    <div class="buttons">
+                        <!-- TODO: Start a new game + keep score -->
+                        <button class="newgame" onClick="window.location.reload();">Jogar Novamente</button>
+
+                        <!-- TODO: Start a new game + reset score -->
+                        <button class="reload" onClick="window.location.reload();">Reiniciar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            var allPlayers = ['circle', 'cross']
+            var currentPlayer = 'circle'
+            var turn = 1
+            var win = false
+
+            const circleTurn = document.querySelector('.footer-content .game-player.player-circle')
+            const crossTurn = document.querySelector('.footer-content .game-player.player-cross')
+            const gameSquares = document.querySelectorAll('.game-content .game-square')
+            
+            const winSituations = [
+                [1,2,3],
+                [4,5,6],
+                [7,8,9],
+                [1,4,7],
+                [2,5,8],
+                [3,6,9],
+                [1,5,9],
+                [3,5,7],
+            ]
+
+            function playerTurn(n) {
+                if(-n==-1){
+                    // console.log('circle')
+                    circleTurn.classList.toggle('hidden')
+                    crossTurn.classList.toggle('hidden')
+                    currentPlayer = allPlayers[1]
+                    n = -n
+                } else if(-n==1) {
+                    // console.log('cross')
+                    circleTurn.classList.toggle('hidden')
+                    crossTurn.classList.toggle('hidden')
+                    currentPlayer = allPlayers[0]
+                    n = -n
+                } return n
+            }
+
+            function checkDraw() {
+                var squareChecked = 0;
+                for(const e of gameSquares){
+                    if (e.classList.contains('circle') || e.classList.contains('cross')) squareChecked+=1
+                    if (squareChecked == 9) {
+                        if (checkWin()) {
+                            return false
+                        } else {
+                            return true
+                        }
+                    }
+                }
+            }
+
+            function checkWin() {
+                for(const e of winSituations){
+                    var sum = 0
+                    for(const i of e){
+                        var squareSum = document.querySelector(`.game-content .game-square[data-square="${i}"]`).dataset.value
+                        sum+= squareSum!=undefined ? parseInt(squareSum) : 0
+                    }
+                    if (sum == 3){
+                        // Circle win
+                        return true
+                    } else if (sum == -3){
+                        // Cross win
+                        return true
+                    }
+                }
+            }
+
+            document.querySelectorAll('.game-square').forEach(square => square.addEventListener('click', function play(){
+                
+                const square = this
+                const squareClass = square.classList
+                const squareNumber = square.dataset.square
+
+                if ( ( !(squareClass.contains('circle') || squareClass.contains('cross')) ) && !win ) {
+                    // Player turn actions
+                    squareClass.add(currentPlayer)
+                    square.dataset.value = turn
+                    if(checkWin() && !checkDraw()){
+                        // Win situation
+                        playerIcon = currentPlayer == 'circle' ? 'O' : 'X' 
+                        document.querySelector('.modal-win').classList.remove('hidden')
+                        document.querySelector('.modal-win .modal-content h1').innerHTML = `${playerIcon} ganhou`
+                        return win = true
+                    } else if (checkDraw()) {
+                        // Draw situation
+                        document.querySelector('.modal-win').classList.remove('hidden')
+                        document.querySelector('.modal-win .modal-content h1').innerHTML = `Empate`
+                        // Return win = true for validation
+                        return win = true
+                    }
+                    // Change player turn
+                    turn = playerTurn(turn)
+                }
+            }))
+        </script>
+    </body>
+</html>
