@@ -170,15 +170,21 @@
             </div>
         </div>
         <script>
-            var allPlayers = ['circle', 'cross']
-            var currentPlayer = 'circle'
-            var turn = 1
-            var win = false
 
-            const circleTurn = document.querySelector('.footer-content .game-player.player-circle')
-            const crossTurn = document.querySelector('.footer-content .game-player.player-cross')
+            // Utils
+
+            let $ = document.querySelector.bind(document);
+
+            // Define variables
+            let allPlayers = ['circle', 'cross']
+            let currentPlayer = 'circle'
+            let turn = 1
+            let win = false
+
+            const circleTurn = $('.footer-content .game-player.player-circle')
+            const crossTurn = $('.footer-content .game-player.player-cross')
             const gameSquares = document.querySelectorAll('.game-content .game-square')
-            
+
             const winSituations = [
                 [1,2,3],
                 [4,5,6],
@@ -190,24 +196,27 @@
                 [3,5,7],
             ]
 
+            function toggleHidden() {
+                circleTurn.classList.toggle('hidden')
+                crossTurn.classList.toggle('hidden')
+            }
+
             function playerTurn(n) {
                 if(-n==-1){
-                    // console.log('circle')
-                    circleTurn.classList.toggle('hidden')
-                    crossTurn.classList.toggle('hidden')
+                    // Circle Turn
+                    toggleHidden()
                     currentPlayer = allPlayers[1]
                     n = -n
                 } else if(-n==1) {
-                    // console.log('cross')
-                    circleTurn.classList.toggle('hidden')
-                    crossTurn.classList.toggle('hidden')
+                    // Cross Turn
+                    toggleHidden()
                     currentPlayer = allPlayers[0]
                     n = -n
                 } return n
             }
 
             function checkDraw() {
-                var squareChecked = 0;
+                let squareChecked = 0;
                 for(const e of gameSquares){
                     if (e.classList.contains('circle') || e.classList.contains('cross')) squareChecked+=1
                     if (squareChecked == 9) {
@@ -222,9 +231,9 @@
 
             function checkWin() {
                 for(const e of winSituations){
-                    var sum = 0
+                    let sum = 0
                     for(const i of e){
-                        var squareSum = document.querySelector(`.game-content .game-square[data-square="${i}"]`).dataset.value
+                        let squareSum = $(`.game-content .game-square[data-square="${i}"]`).dataset.value
                         sum+= squareSum!=undefined ? parseInt(squareSum) : 0
                     }
                     if (sum == 3){
@@ -250,13 +259,13 @@
                     if(checkWin() && !checkDraw()){
                         // Win situation
                         playerIcon = currentPlayer == 'circle' ? 'O' : 'X' 
-                        document.querySelector('.modal-win').classList.remove('hidden')
-                        document.querySelector('.modal-win .modal-content h1').innerHTML = `${playerIcon} ganhou`
+                        $('.modal-win').classList.remove('hidden')
+                        $('.modal-win .modal-content h1').innerHTML = `${playerIcon} ganhou`
                         return win = true
                     } else if (checkDraw()) {
                         // Draw situation
-                        document.querySelector('.modal-win').classList.remove('hidden')
-                        document.querySelector('.modal-win .modal-content h1').innerHTML = `Empate`
+                        $('.modal-win').classList.remove('hidden')
+                        $('.modal-win .modal-content h1').innerHTML = `Empate`
                         // Return win = true for validation
                         return win = true
                     }
