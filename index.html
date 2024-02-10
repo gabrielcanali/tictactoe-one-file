@@ -41,8 +41,8 @@
                 background-color: #fff;
                 -webkit-box-shadow: 0px 10px 8px 3px rgba(0,0,0,0.15); 
                 box-shadow: 0px 10px 8px 3px rgba(0,0,0,0.15);
-                padding: 2rem;
-                margin: 2rem;
+                padding: 1rem;
+                margin: 1rem;
             }
             .game-content{
                 display: grid;
@@ -51,8 +51,8 @@
                 box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.15)
             }
             .game-square{
-                width: 5rem;
-                height: 5rem;
+                width: 3rem;
+                height: 3rem;
             }
             .game-square:nth-child(-n+6){
                 border-bottom: 1px solid #000;
@@ -124,6 +124,21 @@
                     margin-bottom: 1rem;
                 }
             }
+            @media screen and (min-width: 400px) {
+                .main-content{
+                    padding: 2rem;
+                    margin: 2rem;
+                }
+                .game-square{
+                    width: 5rem;
+                    height: 5rem;
+                }
+            }
+            @media screen and (max-width: 190px){
+                .application{
+                    display: none;
+                }
+            }
         </style>
     </head>
     <body>
@@ -131,7 +146,6 @@
             <div class="header-content">
                 <h1>TicTacToe - One file</h1>
             </div>
-            <!-- TODO: Make main content responsive -->
             <div class="main-content">
                 <div class="game-content">
 
@@ -172,7 +186,6 @@
         <script>
 
             // Utils
-
             let $ = document.querySelector.bind(document);
 
             // Define variables
