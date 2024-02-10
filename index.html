@@ -13,7 +13,7 @@
                 font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             }
             .hidden{
-                display: none;
+                display: none !important;
             }
             .application{
                 width: 100vw;
@@ -30,6 +30,7 @@
                width: 100%;
                text-align: center;
                background-color: #fff;
+               z-index: 10;
             }
             .header-content h1{
                 font-size: 16px;
@@ -53,6 +54,7 @@
             .game-square{
                 width: 3rem;
                 height: 3rem;
+                cursor: pointer;
             }
             .game-square:nth-child(-n+6){
                 border-bottom: 1px solid #000;
@@ -71,14 +73,33 @@
                 display: flex;
                 justify-content: center;
             }
-            .modal-win{
+            .modal-wrapper{
+                display: flex;
                 position: absolute;
                 left: 0;
-                right: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                justify-content: center;
+                align-items: center;
+            }
+            .modal-backdrop{
+                width: 100vw;
+                height: 100vh;
+                background-color: #000;
+                opacity: 0.2;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .modal-win{
+                display: flex;
+                width: 100%;
+                max-height: 300px;
                 text-align: center;
                 background-color: #fff;
-                max-height: 300px;
                 padding: 2rem 0;
+                z-index: 10;
             }
             .modal-win .modal-content{
                 display: flex;
@@ -91,7 +112,7 @@
             }
             .buttons{
                 display: flex;
-                flex-direction: row;
+                flex-direction: column;
                 justify-content: space-between;
             }
             button {
@@ -113,15 +134,27 @@
             button.reload:hover{
                 background-color: rgba(218, 159, 159, 0.85);
             }
+            button:first-child {
+                    margin-bottom: 1rem;
+            }
             @media screen and (max-width: 1200px) {
                 .modal-win .modal-content{
                     max-width: 75%;
                 }
-                .buttons{
-                    flex-direction: column;
+            }
+            @media screen and (min-width: 400px) {
+                .main-content{
+                    padding: 2rem;
+                    margin: 2rem;
                 }
-                button:first-child {
-                    margin-bottom: 1rem;
+                .game-square{
+                    width: 5rem;
+                    height: 5rem;
+                }
+            }
+            @media screen and (max-width: 190px){
+                .application{
+                    display: none;
                 }
             }
             @media screen and (min-width: 400px) {
@@ -169,16 +202,19 @@
                     <span class="game-player player-cross hidden">X</span>
                 </p>
             </div>
-            <div class="modal-win hidden">
-                <div class="modal-content">
-                    <h1></h1>
-                    <!-- TODO: Buttons functions + Score system -->
-                    <div class="buttons">
-                        <!-- TODO: Start a new game + keep score -->
-                        <button class="newgame" onClick="window.location.reload();">Jogar Novamente</button>
+            <div class="modal-wrapper hidden">
+                <div class="modal-backdrop"></div>
+                <div class="modal-win">
+                    <div class="modal-content">
+                        <h1></h1>
+                        <!-- TODO: Buttons functions + Score system -->
+                        <div class="buttons">
+                            <!-- TODO: Start a new game + keep score -->
+                            <button class="newgame" onClick="window.location.reload();">Jogar Novamente</button>
 
-                        <!-- TODO: Start a new game + reset score -->
-                        <button class="reload" onClick="window.location.reload();">Reiniciar</button>
+                            <!-- TODO: Start a new game + reset score -->
+                            <!-- <button class="reload" onClick="window.location.reload();">Reiniciar</button> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -272,12 +308,12 @@
                     if(checkWin() && !checkDraw()){
                         // Win situation
                         playerIcon = currentPlayer == 'circle' ? 'O' : 'X' 
-                        $('.modal-win').classList.remove('hidden')
+                        $('.modal-wrapper').classList.remove('hidden')
                         $('.modal-win .modal-content h1').innerHTML = `${playerIcon} ganhou`
                         return win = true
                     } else if (checkDraw()) {
                         // Draw situation
-                        $('.modal-win').classList.remove('hidden')
+                        $('.modal-wrapper').classList.remove('hidden')
                         $('.modal-win .modal-content h1').innerHTML = `Empate`
                         // Return win = true for validation
                         return win = true
